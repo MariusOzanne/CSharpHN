@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -111,7 +112,7 @@ public class PlayerScript : MonoBehaviour
         }
         else if (currentHunger < 0)
         {
-            TakeDamage(1);
+            Death();
         }
 
         //heal test
@@ -124,6 +125,12 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKey(KeyCode.L))
         {
             UseHunger(50);
+        }
+
+        //Death
+        if(currentHealth <= 0)
+        {
+            Death();
         }
     }
 
@@ -143,14 +150,26 @@ public class PlayerScript : MonoBehaviour
         {
             isOnTheGround = true;
         }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyScript enemy = collision.gameObject.GetComponent<EnemyScript>();
+            TakeDamage(enemy.damage);
+            Debug.Log("aie");
+        }
+
+
     }
 
     //damage
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-
         healthBar.SetHealth(currentHealth);
+    }
+    
+    public void Death()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     //use stam

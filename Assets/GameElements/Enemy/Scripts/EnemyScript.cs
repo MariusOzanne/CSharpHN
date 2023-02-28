@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,16 +11,18 @@ public class EnemyScript : MonoBehaviour
     public Transform[] waypoints;
     int waypointIndex;
     Vector3 targetWaypoint;
+    PlayerScript player;
 
     //[SerializeField] Transform target = GameObject.FindGameObjectsWithTag("Player");
     public float lookRadius;
     public float reactionRadius;
     public float attackRadius;
+    public int damage;
     // Start is called before the first frame update
     void Start()
     {
-
         enemyAgent = GetComponent<NavMeshAgent>();
+        player= GetComponent<PlayerScript>();
         UpdateDestination();
     }
 
@@ -43,17 +46,7 @@ public class EnemyScript : MonoBehaviour
             UpdateWaypointIndex();
             UpdateDestination();
             //Debug.Log(targetWaypoint);
-        }
-        //Debug.Log(Vector3.Distance(transform.position, targetWaypoint));
-        //Debug.Log(enemyAgent.destination);
-       /* else
-        {
-            //stay
-            enemyAgent.speed= 0f;
-            enemyAnimator.SetBool("isWalking", false);
-            enemyAnimator.SetBool("isAttacking", false);
-        }*/
-           
+        }           
     }
 
     void UpdateDestination()
@@ -69,6 +62,11 @@ public class EnemyScript : MonoBehaviour
         {
             waypointIndex = 0;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(gameObject);
     }
 
 }
