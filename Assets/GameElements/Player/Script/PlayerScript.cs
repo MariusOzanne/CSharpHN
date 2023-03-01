@@ -30,6 +30,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]public float rotationSpeed = 45f;
     [SerializeField]public float force = 1000f;
     [SerializeField] public float jumpForce = 5;
+    [SerializeField] private int childpick;
+
 
     Rigidbody playerRigidBody;
     AudioSource playerAudioSource;
@@ -108,7 +110,7 @@ public class PlayerScript : MonoBehaviour
         //damage test
         if (Input.GetKeyDown(KeyCode.P))
         {
-            TakeDamage(20);
+            Damage(20);
         }
         else if (currentHunger < 0)
         {
@@ -116,28 +118,42 @@ public class PlayerScript : MonoBehaviour
         }
 
         //heal test
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             Heal(20);
         }
 
         //stam test
-        if (Input.GetKey(KeyCode.L))
+        if (Input.GetKey(KeyCode.I))
         {
             UseHunger(50);
         }
 
         //Death
-        if(currentHealth <= 0)
+        if(currentHealth <= 0 || Input.GetKey(KeyCode.U))
         {
             Death();
+        }
+
+        if (childpick == 5)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        playerRigidBody.position.Set(playerRigidBody.position.x, playerRigidBody.position.y, playerRigidBody.position.z);
-        Debug.Log("collide");
+        //playerRigidBody.position.Set(playerRigidBody.position.x, playerRigidBody.position.y, playerRigidBody.position.z);
+        //Debug.Log("collide");
+
+        Child child = other.gameObject.GetComponent<Child>();
+
+        Debug.Log(other.gameObject.name);
+
+        if (child)
+        {
+            childpick += 1;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -153,7 +169,7 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyScript enemy = collision.gameObject.GetComponent<EnemyScript>();
-            TakeDamage(enemy.damage);
+            Damage(enemy.damage);
             Debug.Log("aie");
         }
 
@@ -161,7 +177,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     //damage
-    public void TakeDamage(int damage)
+    public void Damage(int damage)
     {
         currentHealth -= damage;
         healthBar.SetHealth(currentHealth);
@@ -169,7 +185,7 @@ public class PlayerScript : MonoBehaviour
     
     public void Death()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
     }
 
     //use stam

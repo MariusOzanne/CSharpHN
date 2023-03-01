@@ -8,11 +8,11 @@ public class RegenHeal : MonoBehaviour
     public float rot;
     public float speed;
 
-    //void Update()
-    //{
-    //    transform.Rotate(Vector3.right * Time.deltaTime * speed);
+    void Update()
+    {
+        transform.Rotate(Vector3.right * Time.deltaTime * speed);
 
-    //}
+    }
     void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.gameObject.name);
